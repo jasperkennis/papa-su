@@ -1,52 +1,45 @@
 import Head from 'next/head'
+import Image from 'next/image'
+import axios from 'axios'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+function Home({videos}) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Papa Su · Tasteful sounds</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Papa Su
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+          Tasteful sounds for drunken programmers.
+        </p>
+
+        <p className={styles.description}>One day, we will begin a band. Until that time, <a
+            href="https://www.youtube.com/playlist?list=PLe4etrkqQQuttD9tCh4610EaVoUvX5Rco"
+            target="blank">find the lovely playlist here.</a>
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          {videos.map(video => (
+            <a
+              key={video.id}
+              href={`https://www.youtube.com/watch?v=${video.id}`}
+              className={styles.card}>
+              <h3>{video.title}</h3>
+              <p>{video.channelTitle}</p>
+              <span className={styles.imageContainer}>
+              <Image
+                src={video.thumbnailUrl}
+                layout='fill' />
+              </span>
+            </a>
+          ))}
         </div>
       </main>
 
@@ -63,3 +56,26 @@ export default function Home() {
     </div>
   )
 }
+
+export async function getStaticProps(){
+  let url = ''
+  if (process.env.NODE_ENV === 'development') {
+    url = 'http://0.0.0.0:3000'
+  }
+
+  if (process.env.VERCEL_URL) {
+    url = `https://${process.env.VERCEL_URL}`
+  }
+
+  const videos = await axios.get(`${url}/api/playlist`).catch((err) => {
+    console.error(err)
+  })
+
+  return {
+    props: {
+      videos: videos.data
+    }
+  }
+}
+
+export default Home

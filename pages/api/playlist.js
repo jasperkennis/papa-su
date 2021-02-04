@@ -28,8 +28,6 @@ const getPlaylistItemIds = async (results = [], pageToken) => {
     return getPlaylistItemIds(results, res.data.nextPageToken)
   }
 
-  // console.log(results)
-
   return results.map(playlistItem => playlistItem.contentDetails.videoId)
 };
 
@@ -50,7 +48,6 @@ const getPlaylistSongs = async (results = [], pageToken, ids) => {
     return getPlaylistSongs(results, res.data.nextPageToken, ids)
   }
 
-  console.log(results)
   return results.map((video) => {
     return {
       id: video.id,
