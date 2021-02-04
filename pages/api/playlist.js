@@ -50,9 +50,10 @@ const getPlaylistSongs = async (results = [], pageToken, ids) => {
     return getPlaylistSongs(results, res.data.nextPageToken, ids)
   }
 
-  console.log(results)
-
-  return results.map(playlistItem => playlistItem.id)
+  return results.map(video => {
+    title: video.snippet.title,
+    description: video.snippet.title,
+  })
 }
 
 export default async (req, res) => {
