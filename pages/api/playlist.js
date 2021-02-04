@@ -40,7 +40,7 @@ const getPlaylistItemIds = async (results = [], pageToken) => {
  */
 const getPlaylistSongs = async (results = [], pageToken, ids) => {
   const res = await youtube.videos.list({
-    part: 'snippet,contentDetails',
+    part: 'snippet',
     id: ids.join(','),
     pageToken
   });
@@ -50,14 +50,20 @@ const getPlaylistSongs = async (results = [], pageToken, ids) => {
     return getPlaylistSongs(results, res.data.nextPageToken, ids)
   }
 
-  return results.map(video => {
-    title: video.snippet.title,
-    description: video.snippet.title,
+  console.log(results)
+  return results.map((video) => {
+    return {
+      id: video.id,
+      title: video.snippet.title,
+      channelTitle: video.snippet.channelTitle,
+      description: video.snippet.description,
+      thumbnailUrl: video.snippet.thumbnails.standard.url,
+    }
   })
 }
 
 export default async (req, res) => {
   const playlistItemIds = await getPlaylistItemIds().catch(console.error);
-  const playlistSons = getPlaylistSongs([], null, playlistItemIds)
-  res.status(200).json({ name: 'John Doe' })
+  const playlistSongs = await getPlaylistSongs([], null, playlistItemIds)
+  res.status(200).json(playlistSongs)
 }
