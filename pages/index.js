@@ -39,7 +39,7 @@ export default function Home({videos}) {
         </h1>
 
         <p className={styles.description}>
-          Tasteful sounds for drunken programmers.
+          Tasteful sounds for drunk programming.
         </p>
 
         <p className={styles.description}>One day, we will begin a band. Until that time, <a
