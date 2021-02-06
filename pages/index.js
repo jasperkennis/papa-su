@@ -44,7 +44,7 @@ export default function Home({videos}) {
 
         <p className={styles.description}>One day, we will begin a band. Until that time, <a
             href="https://www.youtube.com/playlist?list=PLe4etrkqQQuttD9tCh4610EaVoUvX5Rco"
-            target="blank">find the lovely playlist here.</a>
+            target="_blank">find the lovely playlist here.</a>
         </p>
 
         <div className={styles.grid}>
