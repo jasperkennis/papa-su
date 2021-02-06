@@ -2,8 +2,30 @@ import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios'
 import styles from '../styles/Home.module.css'
+import { useState } from 'react'
 
-function Home({videos}) {
+export async function getServerSideProps() {
+  let url = ''
+  if (process.env.NODE_ENV === 'development') {
+    url = 'http://0.0.0.0:3000'
+  }
+
+  if (process.env.VERCEL_URL) {
+    url = `https://${process.env.VERCEL_URL}`
+  }
+
+  const videos = await axios.get(`${url}/api/playlist`).catch((err) => {
+    console.error(err)
+  })
+
+  return {
+    props: {
+      videos: videos.data
+    },
+  }
+}
+
+export default function Home({videos}) {
   return (
     <div className={styles.container}>
       <Head>
@@ -56,26 +78,3 @@ function Home({videos}) {
     </div>
   )
 }
-
-export async function getStaticProps(){
-  let url = ''
-  if (process.env.NODE_ENV === 'development') {
-    url = 'http://0.0.0.0:3000'
-  }
-
-  if (process.env.VERCEL_URL) {
-    url = `https://${process.env.VERCEL_URL}`
-  }
-
-  const videos = await axios.get(`${url}/api/playlist`).catch((err) => {
-    console.error(err)
-  })
-
-  return {
-    props: {
-      videos: videos.data
-    }
-  }
-}
-
-export default Home
